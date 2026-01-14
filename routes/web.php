@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -18,3 +18,11 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// --- ZONA PROTEGIDA PARA VIDEOJUEGOS ---
+Route::middleware(['auth'])->group(function () {
+
+    // Mañana Aitor pondrá aquí sus rutas, por ejemplo:
+    // Route::resource('videojuegos', VideojuegoController::class);
+
+});
