@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Consola;
 use Illuminate\Http\Request;
+use App\Models\Consola;
 
 class ConsolaController extends Controller
 {
