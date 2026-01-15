@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroVault - Proyecto Laravel</title>
 
+    {{-- Carga de estilos y scripts de Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-100 font-sans antialiased">
 
-    {{-- Tu barra de navegación con @auth y @guest --}}
+    {{-- Menú de navegación dinámico --}}
     @include('layouts.navigation')
 
-    {{-- Título de la cabecera opcional (usado en perfil) --}}
+    {{-- Cabecera opcional para títulos de página --}}
     @if (isset($header))
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -21,10 +22,16 @@
         </header>
     @endif
 
+    {{-- Contenido Principal Híbrido --}}
     <main class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- CAMBIO CLAVE: Cambiamos @yield por $slot --}}
-            {{ $slot }}
+            {{-- Soporte para Componentes de Blade ($slot) --}}
+            @isset($slot)
+                {{ $slot }}
+            @endisset
+
+            {{-- Soporte para Plantillas tradicionales (@yield) --}}
+            @yield('content')
         </div>
     </main>
 
