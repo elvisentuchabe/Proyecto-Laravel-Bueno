@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('consolas', function (Blueprint $table) {
             $table->id();
-            $table->string('titulo');
+            $table->string('nombre');
             $table->string('fabricante');
             $table->integer('anio_publicacion');
             $table->string('logo');
