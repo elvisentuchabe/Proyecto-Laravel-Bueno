@@ -7,7 +7,7 @@
                 ¡Ahora sí!
             </h1>
             <p class="text-gray-700">
-                Si estás leyendo esto, significa que:
+                Página de bienvenida para cualquier usuario
             </p>
             <ul class="list-disc list-inside mt-2 text-gray-600">
                 <li>El archivo <strong>welcome</strong> está cargando correctamente.</li>
