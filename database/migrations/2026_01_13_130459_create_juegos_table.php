@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('imagen');
             $table->text('descripcion');
             $table->foreignId('consola_id')->constrained('consolas')->onDelete('cascade');
+            $table->string('licencia_imagen');
             $table->timestamps();
         });
     }
