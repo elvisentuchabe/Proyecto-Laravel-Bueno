@@ -9,6 +9,14 @@ use App\Models\Consola;
 
 class VideojuegoController extends Controller
 {
+
+    // Muestra el listado de videojuegos (Paginado y Ordenado)
+    public function index() {
+        $videojuegos = Juego::orderBy('anio', 'desc')->paginate(10);
+
+        return view('videojuegos.index', compact('videojuegos'));
+    }
+
     //Muestra el formulario para crear un nuevo juego
     public function create() {
         $consolas = Consola::all();
@@ -43,7 +51,7 @@ class VideojuegoController extends Controller
     public function edit(Juego $videojuego) {
         $consolas = Consola::all();
 
-        return view('videojuego.edit', compact('videojuego', 'consolas'));
+        return view('videojuegos.edit', compact('videojuego', 'consolas'));
     }
 
     //Actualiza el juego en la base de datos
