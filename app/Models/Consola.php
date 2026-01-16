@@ -16,6 +16,7 @@ class Consola extends Model
         'nombre', 
         'fabricante', 
         'anio_publicacion', 
-        'logo'
+        'logo',
+        'licencia_logo'
     ];
 }
