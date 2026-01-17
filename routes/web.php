@@ -36,9 +36,10 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 3. TRABAJO DE AITOR: Consolas (Listado y Detalle)
+    // 3. TRABAJO DE AITOR: Consolas (Listado, Detalle y Borrado)
     Route::get('/consolas', [ConsolaController::class, 'index'])->name('consolas.index');
     Route::get('/consolas/{consola}', [ConsolaController::class, 'show'])->name('consolas.show');
+    Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
 
     // 4. TRABAJO DE VICENTE: Gestión completa de Videojuegos
     Route::resource('videojuegos', VideojuegoController::class);
