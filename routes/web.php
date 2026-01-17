@@ -36,8 +36,10 @@ Route::middleware(['auth'])->group(function () {
 
     // 3. TRABAJO DE AITOR: Consolas
     // He unificado todo aquí para seguridad. Asegúrate de que ConsolaController tenga el método 'index'.
+    // 3. TRABAJO DE AITOR: Consolas (Listado, Detalle y Borrado)
     Route::get('/consolas', [ConsolaController::class, 'index'])->name('consolas.index');
     Route::get('/consolas/{consola}', [ConsolaController::class, 'show'])->name('consolas.show');
+    Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
 
     // 4. TRABAJO DE VICENTE: Videojuegos
     // 'resource' crea AUTOMÁTICAMENTE: index, create, store, show, edit, update, destroy
