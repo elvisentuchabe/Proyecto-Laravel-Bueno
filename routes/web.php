@@ -34,16 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 3. TRABAJO DE AITOR: Consolas
-    // He unificado todo aquí para seguridad. Asegúrate de que ConsolaController tenga el método 'index'.
-    // 3. TRABAJO DE AITOR: Consolas (Listado, Detalle y Borrado)
+    // 3. Consolas (Listado, Detalle y Borrado)
     Route::get('/consolas', [ConsolaController::class, 'index'])->name('consolas.index');
     Route::get('/consolas/{consola}', [ConsolaController::class, 'show'])->name('consolas.show');
     Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
 
-    // 4. TRABAJO DE VICENTE: Videojuegos
-    // 'resource' crea AUTOMÁTICAMENTE: index, create, store, show, edit, update, destroy
-    // No necesitas definir rutas sueltas para esto.
+    // 4. Videojuegos (index, create, store, show, edit, update, destroy)
     Route::resource('videojuegos', VideojuegoController::class);
 
 });
