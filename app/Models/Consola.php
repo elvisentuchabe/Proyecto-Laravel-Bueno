@@ -19,4 +19,8 @@ class Consola extends Model
         'logo',
         'licencia_logo'
     ];
+
+    public function videojuegos() {
+        return $this->hasMany(Juego::class);
+    }
 }

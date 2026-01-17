@@ -24,6 +24,6 @@ class ConsolaController extends Controller
     public function destroy(Consola $consola) {
         $consola->delete();
 
-        return redirect()->route('consola.index')->with('success', 'Consola y sus juegos eliminados correctamente');
+        return redirect()->route('consolas.index')->with('success', 'Consola y sus juegos eliminados correctamente');
     }
 }

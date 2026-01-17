@@ -12,7 +12,7 @@ class VideojuegoController extends Controller
 
     // Muestra el listado de videojuegos (Paginado y Ordenado)
     public function index() {
-        $videojuegos = Juego::orderBy('anio', 'desc')->paginate(10);
+        $videojuegos = Juego::orderBy('anio_lanzamiento', 'desc')->paginate(10);
 
         return view('videojuegos.index', compact('videojuegos'));
     }

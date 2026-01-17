@@ -18,7 +18,7 @@ class StoreVideojuegoRequest extends FormRequest
     {
         return [
             'titulo' => 'required|string|max:255',
-            'anio' => 'required|integer|min:1950|max:'.date('Y'),
+            'anio_lanzamiento' => 'required|integer|min:1950|max:'.date('Y'),
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
             'imagen' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
