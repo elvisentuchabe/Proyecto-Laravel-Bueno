@@ -15,19 +15,19 @@
 
                         <div>
                             <x-input-label for="nombre" :value="__('Nombre de la Consola')" />
-                            <x-text-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus placeholder="Ej: Super Nintendo" />
+                            <x-text-input id="nombre" class="block mt-1 w-full" type="text" name="nombre" :value="old('nombre')" required autofocus placeholder="Ej: PlayStation 5" />
                             <x-input-error :messages="$errors->get('nombre')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="fabricante" :value="__('Fabricante')" />
-                            <x-text-input id="fabricante" class="block mt-1 w-full" type="text" name="fabricante" :value="old('fabricante')" required placeholder="Ej: Nintendo, Sega, Sony..." />
+                            <x-text-input id="fabricante" class="block mt-1 w-full" type="text" name="fabricante" :value="old('fabricante')" required placeholder="Ej: Sony" />
                             <x-input-error :messages="$errors->get('fabricante')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="anio_publicacion" :value="__('Año de Lanzamiento')" />
-                            <x-text-input id="anio_publicacion" class="block mt-1 w-full" type="number" name="anio_publicacion" :value="old('anio_publicacion')" required />
+                            <x-text-input id="anio_publicacion" class="block mt-1 w-full" type="number" name="anio_publicacion" :value="old('anio_publicacion')" required min="1950" max="{{ date('Y') }}" />
                             <x-input-error :messages="$errors->get('anio_publicacion')" class="mt-2" />
                         </div>
 
