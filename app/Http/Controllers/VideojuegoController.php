@@ -7,100 +7,136 @@ use App\Models\Consola;
 use App\Http\Requests\StoreVideojuegoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class VideojuegoController extends Controller
 {
+    // =========================================================================
+    // 1. MÉTODO INDEX (Todos los juegos)
+    // =========================================================================
+    public function index(Request $request) {
+        $query = Juego::with('consola');
 
-    public function index() {
-        // CAMBIO CLAVE: Usamos 'paginate(10)' en vez de 'get()'
-        // Esto prepara los datos para que funcionen los botones de "Siguiente página"
-        $videojuegos = Juego::with('consola')->paginate(10); 
+        if ($request->filled('search')) {
+            $query->where('titulo', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('consola_id')) {
+            $query->where('consola_id', $request->consola_id);
+        }
 
-        return view('videojuegos.index', compact('videojuegos'));
+        $videojuegos = $query->paginate(10);
+        $consolas = Consola::all();
+
+        return view('videojuegos.index', compact('videojuegos', 'consolas'));
     }
 
-    // Muestra la ficha detallada de un juego
+    // =========================================================================
+    // 2. MÉTODO BÓVEDA (Solo mis favoritos)
+    // =========================================================================
+    public function boveda(Request $request) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Consulta sobre la relación 'favoritos' del usuario
+        $query = $user->favoritos()->with('consola');
+
+        // Mantenemos filtros por si quieres buscar dentro de tus favoritos
+        if ($request->filled('search')) {
+            $query->where('titulo', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('consola_id')) {
+            // Nota: Al usar relación, a veces hay que especificar tabla
+            $query->where('juegos.consola_id', $request->consola_id);
+        }
+
+        $videojuegos = $query->paginate(10);
+        $consolas = Consola::all();
+
+        // Variable bandera para cambiar el título en la vista
+        $esBoveda = true;
+
+        return view('videojuegos.index', compact('videojuegos', 'consolas', 'esBoveda'));
+    }
+
+    // =========================================================================
+    // 3. MÉTODOS ESTÁNDAR
+    // =========================================================================
+
     public function show(Juego $videojuego){
-        // El nombre de la variable ($videojuego) DEBE coincidir con el compact('videojuego')
         return view('videojuegos.show', compact('videojuego'));
     }
 
     public function create()
     {
-        // Necesitamos las consolas para el desplegable (Select)
         $consolas = Consola::all();
         return view('videojuegos.create', compact('consolas'));
     }
 
     public function store(StoreVideojuegoRequest $request)
     {
-        // 1. VALIDACIÓN ESTRICTA (RA6 - Seguridad)
         $validated = $request->validated();
 
-        // 2. MANEJO DE IMAGEN (RA5)
         if ($request->hasFile('imagen')) {
-            // Guarda en storage/app/public/juegos
-            $path = $request->file('imagen')->store('juegos', 'public'); 
+            $path = $request->file('imagen')->store('juegos', 'public');
             $validated['imagen'] = $path;
         }
 
-        // 3. GUARDAR EN BD
         Juego::create($validated);
 
-        // 4. FEEDBACK (Mensaje flash)
-        return redirect()->route('consolas.show', $request->consola_id)
-                         ->with('success', '¡Videojuego añadido correctamente a la colección!');
+        return redirect()->route('videojuegos.index')
+                         ->with('success', '¡Videojuego añadido correctamente!');
     }
-    // --- MÉTODOS DE EDICIÓN ---
 
     public function edit(Juego $videojuego)
     {
-        // 1. Necesitamos las consolas para el desplegable
-        $consolas = \App\Models\Consola::all();
-        
-        // 2. Retornamos la vista de edición pasando el juego y las consolas
+        $consolas = Consola::all();
         return view('videojuegos.edit', compact('videojuego', 'consolas'));
     }
 
     public function update(Request $request, Juego $videojuego) {
-        // 1. Validar datos (igual que en store, pero la imagen es opcional)
         $validated = $request->validate([
             'titulo' => 'required|min:3|max:255',
             'anio_lanzamiento' => 'required|integer|min:1950|max:'.date('Y'),
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // 2. Gestión de imagen (Solo si se sube una nueva)
         if ($request->hasFile('imagen')) {
-            // (Opcional) Aquí podrías borrar la imagen antigua del storage si quisieras limpiar
-            
-            // Subir la nueva
+            if($videojuego->imagen) {
+                 Storage::disk('public')->delete($videojuego->imagen);
+            }
             $path = $request->file('imagen')->store('juegos', 'public');
             $validated['imagen'] = $path;
         }
 
-        // 3. Actualizar en BD
         $videojuego->update($validated);
 
-        // 4. Redirigir
         return redirect()->route('videojuegos.show', $videojuego)
                          ->with('success', 'Juego actualizado correctamente.');
     }
 
     public function destroy(Juego $videojuego)
     {
-        // 1. Si el juego tiene imagen, la borramos del disco duro para no dejar basura
         if ($videojuego->imagen) {
             Storage::disk('public')->delete($videojuego->imagen);
         }
 
-        // 2. Borramos el registro de la base de datos
         $videojuego->delete();
 
-        // 3. Redirigimos a la lista
         return redirect()->route('videojuegos.index')
                          ->with('success', 'Juego eliminado correctamente.');
+    }
+
+    public function toggleFavorito($id)
+    {
+        $juego = Juego::findOrFail($id);
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $user->favoritos()->toggle($juego->id);
+
+        return back();
     }
 }
