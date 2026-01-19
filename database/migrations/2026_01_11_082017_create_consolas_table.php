@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fabricante');
             $table->integer('anio_publicacion');
             $table->string('logo');
-            $table->string('licencia_logo');
+            $table->string('licencia_logo')->nullable();
             $table->timestamps();
         });
     }
