@@ -13,7 +13,7 @@ class VideojuegoController extends Controller
     public function index() {
         // CAMBIO CLAVE: Usamos 'paginate(10)' en vez de 'get()'
         // Esto prepara los datos para que funcionen los botones de "Siguiente página"
-        $videojuegos = Juego::with('consola')->paginate(10); 
+        $videojuegos = Juego::with('consola')->paginate(10);
 
         return view('videojuegos.index', compact('videojuegos'));
     }
@@ -45,7 +45,7 @@ class VideojuegoController extends Controller
         // 2. MANEJO DE IMAGEN (RA5)
         if ($request->hasFile('imagen')) {
             // Guarda en storage/app/public/juegos
-            $path = $request->file('imagen')->store('juegos', 'public'); 
+            $path = $request->file('imagen')->store('juegos', 'public');
             $validated['imagen'] = $path;
         }
 
@@ -62,7 +62,7 @@ class VideojuegoController extends Controller
     {
         // 1. Necesitamos las consolas para el desplegable
         $consolas = \App\Models\Consola::all();
-        
+
         // 2. Retornamos la vista de edición pasando el juego y las consolas
         return view('videojuegos.edit', compact('videojuego', 'consolas'));
     }
@@ -74,13 +74,13 @@ class VideojuegoController extends Controller
             'anio_lanzamiento' => 'required|integer|min:1950|max:'.date('Y'),
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // 2. Gestión de imagen (Solo si se sube una nueva)
         if ($request->hasFile('imagen')) {
             // (Opcional) Aquí podrías borrar la imagen antigua del storage si quisieras limpiar
-            
+
             // Subir la nueva
             $path = $request->file('imagen')->store('juegos', 'public');
             $validated['imagen'] = $path;

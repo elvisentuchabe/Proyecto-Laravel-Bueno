@@ -5,64 +5,43 @@ use App\Http\Controllers\ConsolaController;
 use App\Http\Controllers\VideojuegoController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| RUTAS PÚBLICAS
-|--------------------------------------------------------------------------
-*/
+// --- RUTAS PÚBLICAS ---
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-/*
-|--------------------------------------------------------------------------
-| RUTAS PROTEGIDAS (Requiere Login)
-|--------------------------------------------------------------------------
-*/
+// --- RUTAS PROTEGIDAS (AUTH) ---
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // 1. DASHBOARD
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
-    // 2. PERFIL
+    // 1. DASHBOARD & PERFIL
+    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ========================================================================
-    // 3. ZONA DE ADMINISTRACIÓN (¡¡¡IMPORTANTE: VA PRIMERO!!!)
-    // ========================================================================
-    // Definimos esto ANTES que las rutas de lectura para que "create" no se confunda con un ID.
-    
+    // 2. ADMINISTRACIÓN (ADMIN)
+    // Definimos esto PRIMERO para evitar conflictos de rutas
     Route::middleware(['admin'])->group(function () {
-        
-        // CONSOLAS (Admin)
-        Route::get('/consolas/create', [ConsolaController::class, 'create'])->name('consolas.create');
-        Route::post('/consolas', [ConsolaController::class, 'store'])->name('consolas.store');
-        Route::get('/consolas/{consola}/edit', [ConsolaController::class, 'edit'])->name('consolas.edit');
-        Route::put('/consolas/{consola}', [ConsolaController::class, 'update'])->name('consolas.update');
-        Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
-
-        // VIDEOJUEGOS (Admin)
-        // Usamos resource exceptuando index y show (que son públicas abajo)
+        // Genera: create, store, edit, update, destroy
+        Route::resource('consolas', ConsolaController::class)->except(['index', 'show']);
         Route::resource('videojuegos', VideojuegoController::class)->except(['index', 'show']);
     });
 
-    // ========================================================================
-    // 4. ZONA DE LECTURA (Usuarios normales + Admin)
-    // ========================================================================
-    
-    // CONSOLAS (Lectura)
+    // 3. LECTURA E INTERACCIÓN (Cualquier usuario logueado)
+
+    // --- CONSOLAS ---
     Route::get('/consolas', [ConsolaController::class, 'index'])->name('consolas.index');
     Route::get('/consolas/{consola}', [ConsolaController::class, 'show'])->name('consolas.show');
-    
-    // VIDEOJUEGOS (Lectura)
-    Route::get('/videojuegos', [VideojuegoController::class, 'index'])->name('videojuegos.index');
-    // Esta ruta es la "peligrosa" (comodín). Al estar AL FINAL, ya no dará problemas.
-    Route::get('/videojuegos/{videojuego}', [VideojuegoController::class, 'show'])->name('videojuegos.show');
 
+    // --- VIDEOJUEGOS ---
+    Route::get('/videojuegos', [VideojuegoController::class, 'index'])->name('videojuegos.index');
+
+    // Ruta para FAVORITOS (Agregada aquí)
+    // Usamos {videojuego} para que coincida con el modelo automáticamente
+    Route::post('/videojuegos/{videojuego}/favorito', [VideojuegoController::class, 'toggleFavorito'])->name('videojuegos.favorito');
+
+    // Ruta de Detalle (Va al final por el comodín)
+    Route::get('/videojuegos/{videojuego}', [VideojuegoController::class, 'show'])->name('videojuegos.show');
 });
 
 require __DIR__.'/auth.php';
