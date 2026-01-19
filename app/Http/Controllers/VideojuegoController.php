@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Juego;
 use App\Models\Consola;
+use App\Http\Requests\StoreVideojuegoRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,16 +32,10 @@ class VideojuegoController extends Controller
         return view('videojuegos.create', compact('consolas'));
     }
 
-    public function store(Request $request)
+    public function store(StoreVideojuegoRequest $request)
     {
         // 1. VALIDACIÓN ESTRICTA (RA6 - Seguridad)
-        $validated = $request->validate([
-            'titulo' => 'required|min:3|max:255',
-            'anio_lanzamiento' => 'required|integer|min:1950|max:'.(date('Y')),
-            'descripcion' => 'nullable|string',
-            'consola_id' => 'required|exists:consolas,id', // Evita hackeos de IDs falsos
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Solo imágenes, max 2MB
-        ]);
+        $validated = $request->validated();
 
         // 2. MANEJO DE IMAGEN (RA5)
         if ($request->hasFile('imagen')) {
