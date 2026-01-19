@@ -8,6 +8,20 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            {{-- Mensaje de error/éxito por si intentas borrar una consola con juegos --}}
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">¡Atención!</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+            
             {{-- BOTÓN GLOBAL DE AÑADIR (Solo Admin) --}}
             @if(Auth::user()->role === 'admin')
                 <div class="flex justify-end mb-4">
@@ -27,10 +41,10 @@
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($consolas as $consola)
-                                {{-- CAMBIO: La tarjeta ahora es un div, no un enlace 'a' --}}
+                                {{-- Tarjeta individual --}}
                                 <div class="border rounded-lg shadow-sm hover:shadow-md transition duration-300 overflow-hidden bg-white flex flex-col">
                                     
-                                    {{-- Enlace en la imagen para ir a detalles --}}
+                                    {{-- Imagen --}}
                                     <a href="{{ route('consolas.show', $consola) }}" class="h-48 bg-gray-100 flex items-center justify-center p-4 hover:bg-white transition relative">
                                         @if($consola->logo)
                                             <img src="{{ Str::startsWith($consola->logo, 'http') ? $consola->logo : asset('storage/'.$consola->logo) }}" 
@@ -56,12 +70,24 @@
                                             </span>
                                         </div>
 
-                                        {{-- BOTÓN EDITAR (Solo Admin) --}}
+                                        {{-- ZONA ADMIN: EDITAR Y BORRAR --}}
                                         @if(Auth::user()->role === 'admin')
-                                            <div class="mt-auto pt-3 border-t border-gray-100 flex justify-end">
-                                                <a href="{{ route('consolas.edit', $consola) }}" class="text-sm bg-yellow-100 text-yellow-700 hover:bg-yellow-200 py-1 px-3 rounded font-medium transition">
+                                            <div class="mt-auto pt-3 border-t border-gray-100 flex justify-end gap-2">
+                                                
+                                                {{-- Botón Editar --}}
+                                                <a href="{{ route('consolas.edit', $consola) }}" class="text-sm bg-yellow-100 text-yellow-700 hover:bg-yellow-200 py-1 px-3 rounded font-medium transition flex items-center">
                                                     ✏️ Editar
                                                 </a>
+
+                                                {{-- Botón Borrar --}}
+                                                <form action="{{ route('consolas.destroy', $consola) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta consola? Esta acción no se puede deshacer.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-sm bg-red-100 text-red-700 hover:bg-red-200 py-1 px-3 rounded font-medium transition flex items-center">
+                                                        🗑️ Borrar
+                                                    </button>
+                                                </form>
+
                                             </div>
                                         @endif
                                     </div>

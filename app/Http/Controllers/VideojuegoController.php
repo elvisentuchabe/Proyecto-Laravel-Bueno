@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Juego;
 use App\Models\Consola;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class VideojuegoController extends Controller
 {
@@ -91,5 +92,20 @@ class VideojuegoController extends Controller
         // 4. Redirigir
         return redirect()->route('videojuegos.show', $videojuego)
                          ->with('success', 'Juego actualizado correctamente.');
+    }
+
+    public function destroy(Juego $videojuego)
+    {
+        // 1. Si el juego tiene imagen, la borramos del disco duro para no dejar basura
+        if ($videojuego->imagen) {
+            Storage::disk('public')->delete($videojuego->imagen);
+        }
+
+        // 2. Borramos el registro de la base de datos
+        $videojuego->delete();
+
+        // 3. Redirigimos a la lista
+        return redirect()->route('videojuegos.index')
+                         ->with('success', 'Juego eliminado correctamente.');
     }
 }
