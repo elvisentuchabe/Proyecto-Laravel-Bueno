@@ -110,8 +110,10 @@
                     <div class="mt-4">
                         {{ $videojuegos->appends(request()->query())->links() }}
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+

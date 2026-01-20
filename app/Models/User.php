@@ -14,7 +14,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role', // Importante: Campo añadido para roles
     ];
 
     protected $hidden = [
@@ -30,7 +30,27 @@ class User extends Authenticatable
         ];
     }
 
-    // Verifica si es admin
+    /*
+    |--------------------------------------------------------------------------
+    | Relaciones
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Relación muchos a muchos con el modelo Juego.
+     * Se especifica 'juego_user' porque es el nombre exacto de la tabla pivote que creamos.
+     */
+    public function favoritos()
+    {
+        return $this->belongsToMany(Juego::class, 'juego_user');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Funciones Auxiliares
+    |--------------------------------------------------------------------------
+    */
+
     public function isAdmin() {
         return $this->role === 'admin';
     }

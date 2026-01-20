@@ -100,6 +100,7 @@ class VideojuegoController extends Controller
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('imagen')) {
