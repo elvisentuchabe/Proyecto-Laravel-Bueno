@@ -22,4 +22,10 @@ class Juego extends Model
     public function consola() {
         return $this->belongsTo(Consola::class);
     }
+
+    // Relación: Usuarios que han dado like a este juego
+    public function fans()
+    {
+        return $this->belongsToMany(User::class, 'juego_user', 'juego_id', 'user_id');
+    }
 }

@@ -80,6 +80,19 @@
                                                     Ver
                                                 </a>
 
+                                                <form action="{{ route('videojuegos.favorito', $juego) }}" method="POST" class="inline-block ml-2">
+                                                    @csrf
+                                                    <button type="submit" class="transition transform hover:scale-110 focus:outline-none" title="Añadir/Quitar de favoritos">
+                                                        {{-- Si el usuario YA lo tiene en favoritos, mostramos corazón rojo --}}
+                                                        @if(Auth::user()->favoritos->contains($juego->id))
+                                                            <span class="text-2xl">❤️</span>
+                                                        @else
+                                                            {{-- Si NO lo tiene, mostramos corazón blanco/vacío --}}
+                                                            <span class="text-2xl">🤍</span>
+                                                        @endif
+                                                    </button>
+                                                </form>
+
                                                 {{-- Botones ADMIN (Editar / Eliminar) --}}
                                                 @auth
                                                     @if(Auth::user()->role === 'admin')

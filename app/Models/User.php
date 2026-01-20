@@ -49,26 +49,16 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
-    | Relaciones
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Relación muchos a muchos con el modelo Juego.
-     * Se especifica 'juego_user' porque es el nombre exacto de la tabla pivote que creamos.
-     */
-    public function favoritos()
-    {
-        return $this->belongsToMany(Juego::class, 'juego_user');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Funciones Auxiliares
     |--------------------------------------------------------------------------
     */
 
     public function isAdmin() {
         return $this->role === 'admin';
+    }
+
+    public function favoritos() {
+        // 'juego_user' es el nombre de tu tabla
+        return $this->belongsToMany(Juego::class, 'juego_user', 'user_id', 'juego_id')->withTimestamps();
     }
 }

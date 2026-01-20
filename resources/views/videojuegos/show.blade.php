@@ -28,10 +28,26 @@
                     </div>
 
                     <div class="w-full md:w-2/3">
-                        <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ $videojuego->titulo }}</h1>
+                        
+                        {{-- TÍTULO + BOTÓN DE FAVORITOS --}}
+                        <div class="flex items-center justify-between mb-2">
+                            <h1 class="text-4xl font-bold text-gray-900">{{ $videojuego->titulo }}</h1>
+                            
+                            {{-- Formulario del Corazón --}}
+                            <form action="{{ route('videojuegos.favorito', $videojuego) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-4xl transition transform hover:scale-110 focus:outline-none" title="Añadir/Quitar de favoritos">
+                                    @if(Auth::user()->favoritos->contains($videojuego->id))
+                                        ❤️
+                                    @else
+                                        🤍
+                                    @endif
+                                </button>
+                            </form>
+                        </div>
                         
                         <div class="flex items-center space-x-4 mb-6">
-                            <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded dark:bg-indigo-900 dark:text-indigo-300">
+                            <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded">
                                 {{ $videojuego->consola ? $videojuego->consola->nombre : 'Consola Desconocida' }}
                             </span>
                             <span class="text-gray-500 text-sm font-semibold">

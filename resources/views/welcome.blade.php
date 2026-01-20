@@ -18,7 +18,7 @@
                     <div class="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start gap-3">
                         @auth
                             <div class="rounded-md shadow">
-                                <a href="{{ url('/dashboard') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-white bg-red-600 hover:bg-red-700 md:py-4 md:text-lg transition duration-150">
+                                <a href="{{ url('/mi-boveda') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-white bg-red-600 hover:bg-red-700 md:py-4 md:text-lg transition duration-150">
                                     Ir a mi Bóveda
                                 </a>
                             </div>

@@ -12,25 +12,25 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 
-                    {{-- Link: INICIO --}}
                     <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
-                        {{ __('Inicio') }}
+                        {{__('Inicio')}}
                     </x-nav-link>
 
-                    {{-- Link: VIDEOJUEGOS (Activo en index, show, create, etc.) --}}
-                    <x-nav-link :href="route('videojuegos.index')" :active="request()->routeIs('videojuegos.*')">
+                    <x-nav-link :href="route('videojuegos.index')" :active="request()->routeIs('videojuegos.index')">
                         {{ __('Videojuegos') }}
                     </x-nav-link>
-
-                    {{-- Link: CONSOLAS --}}
-                    <x-nav-link :href="route('consolas.index')" :active="request()->routeIs('consolas.*')">
+                    
+                    <x-nav-link :href="route('consolas.index')" :active="request()->routeIs('consolas.index')">
                         {{ __('Consolas') }}
                     </x-nav-link>
 
-                    {{-- Link: NOSOTROS --}}
-                    <x-nav-link href="#" :active="false">
-                        {{ __('Nosotros') }}
-                    </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('videojuegos.boveda')" :active="request()->routeIs('videojuegos.boveda')">
+                            {{ __('Mi Bóveda') }}
+                        </x-nav-link>
+                    @endauth
+                    
+
                 </div>
             </div>
 
