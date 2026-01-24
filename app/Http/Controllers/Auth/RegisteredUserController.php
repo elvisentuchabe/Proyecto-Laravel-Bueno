@@ -36,10 +36,21 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    'name' => $request->name,
+    'email' => $request->email,
+    'password' => Hash::make($request->password),
+
+    // 🎲 GENERACIÓN ALEATORIA 🎲
+
+    // 1. Dinero inicial aleatorio entre 50€ y 1000€
+    'wallet_balance' => rand(50, 1000),
+
+    // 2. CVC aleatorio entre 100 y 999
+    'cvc' => rand(100, 999),
+
+    // Inicializamos donaciones a 0
+    'total_donated' => 0,
+]);
 
         event(new Registered($user));
 

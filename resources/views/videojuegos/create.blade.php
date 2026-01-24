@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    
+
                     {{-- IMPORTANTE: enctype="multipart/form-data" es obligatorio para subir imágenes --}}
                     <form method="POST" action="{{ route('videojuegos.store') }}" enctype="multipart/form-data" class="space-y-6">
                         @csrf
@@ -46,15 +46,26 @@
                             <x-input-error :messages="$errors->get('descripcion')" class="mt-2" />
                         </div>
 
+                        {{-- SECCIÓN DE IMAGEN CON PREVISUALIZACIÓN --}}
                         <div>
                             <x-input-label for="imagen" :value="__('Carátula del Juego')" />
-                            <input id="imagen" type="file" name="imagen" class="block mt-1 w-full text-sm text-gray-500
+
+                            {{-- Añadimos 'onchange' y 'accept' --}}
+                            <input id="imagen" type="file" name="imagen" accept="image/*"
+                                onchange="previewImage(event)"
+                                class="block mt-1 w-full text-sm text-gray-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-md file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-indigo-50 file:text-indigo-700
                                 hover:file:bg-indigo-100" />
+
                             <x-input-error :messages="$errors->get('imagen')" class="mt-2" />
+
+                            {{-- Contenedor donde saldrá la foto --}}
+                            <div class="mt-4">
+                                <img id="image-preview" src="#" alt="Vista previa" class="hidden w-48 h-auto rounded-lg shadow-md border border-gray-200 object-cover" />
+                            </div>
                         </div>
 
                         <div class="flex items-center gap-4">
@@ -67,4 +78,23 @@
             </div>
         </div>
     </div>
+
+    {{-- SCRIPT JAVASCRIPT PARA PREVISUALIZAR --}}
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('image-preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden'); // Mostramos la imagen quitando la clase 'hidden'
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </x-app-layout>

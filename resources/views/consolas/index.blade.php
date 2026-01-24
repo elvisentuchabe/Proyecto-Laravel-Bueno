@@ -1,103 +1,119 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Museo de Consolas') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
+                🏛️ Mi Colección
+            </h2>
+
+            @if(Auth::user()->isAdmin())
+                <a href="{{ route('consolas.create') }}" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-5 rounded-full shadow-lg transition transform hover:scale-105 flex items-center gap-2 text-sm">
+                    <span>+</span> Nueva Consola
+                </a>
+            @endif
+        </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            {{-- Mensaje de error/éxito por si intentas borrar una consola con juegos --}}
-            @if(session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <strong class="font-bold">¡Atención!</strong>
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
 
             @if(session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
-            
-            {{-- BOTÓN GLOBAL DE AÑADIR (Solo Admin) --}}
-            @if(Auth::user()->role === 'admin')
-                <div class="flex justify-end mb-4">
-                    <a href="{{ route('consolas.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition">
-                        + Añadir Consola
-                    </a>
+                <div class="mb-8 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 shadow-sm rounded-r flex items-center gap-3">
+                    <span class="text-xl">✅</span>
+                    <p class="font-medium">{{ session('success') }}</p>
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+            {{-- GRID DE CONSOLAS --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                    @if($consolas->isEmpty())
-                        <div class="text-center py-10 text-gray-500">
-                            <p class="text-lg">No hay consolas registradas todavía.</p>
-                        </div>
-                    @else
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($consolas as $consola)
-                                {{-- Tarjeta individual --}}
-                                <div class="border rounded-lg shadow-sm hover:shadow-md transition duration-300 overflow-hidden bg-white flex flex-col">
-                                    
-                                    {{-- Imagen --}}
-                                    <a href="{{ route('consolas.show', $consola) }}" class="h-48 bg-gray-100 flex items-center justify-center p-4 hover:bg-white transition relative">
-                                        @if($consola->logo)
-                                            <img src="{{ Str::startsWith($consola->logo, 'http') ? $consola->logo : asset('storage/'.$consola->logo) }}" 
-                                                 alt="{{ $consola->nombre }}" 
-                                                 class="max-h-full max-w-full object-contain">
-                                        @else
-                                            <span class="text-gray-400 font-bold text-xl">Sin Logo</span>
-                                        @endif
-                                    </a>
+                @foreach ($consolas as $consola)
+                    @php
+                        // COLORES DE MARCA
+                        $brand = match(true) {
+                            Str::contains($consola->nombre, ['PS4', 'PS5', 'PlayStation', 'Sony']) => ['from' => 'from-blue-500', 'to' => 'to-indigo-600', 'text' => 'text-blue-600', 'bg_light' => 'bg-blue-50', 'shadow' => 'group-hover:shadow-blue-200'],
+                            Str::contains($consola->nombre, ['Xbox', 'Microsoft']) => ['from' => 'from-green-500', 'to' => 'to-emerald-600', 'text' => 'text-green-600', 'bg_light' => 'bg-green-50', 'shadow' => 'group-hover:shadow-green-200'],
+                            Str::contains($consola->nombre, ['Switch', 'Nintendo', 'Wii', 'DS']) => ['from' => 'from-red-500', 'to' => 'to-rose-600', 'text' => 'text-red-600', 'bg_light' => 'bg-red-50', 'shadow' => 'group-hover:shadow-red-200'],
+                            Str::contains($consola->nombre, ['PC', 'Steam']) => ['from' => 'from-amber-400', 'to' => 'to-orange-500', 'text' => 'text-amber-600', 'bg_light' => 'bg-amber-50', 'shadow' => 'group-hover:shadow-amber-200'],
+                            default => ['from' => 'from-purple-500', 'to' => 'to-fuchsia-600', 'text' => 'text-purple-600', 'bg_light' => 'bg-purple-50', 'shadow' => 'group-hover:shadow-purple-200']
+                        };
+                    @endphp
 
-                                    {{-- Datos --}}
-                                    <div class="p-4 border-t flex-1 flex flex-col">
-                                        <a href="{{ route('consolas.show', $consola) }}" class="hover:text-blue-600 transition">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-1">{{ $consola->nombre }}</h3>
-                                        </a>
-                                        
-                                        <div class="flex justify-between items-center mt-2 mb-4">
-                                            <span class="text-sm font-semibold text-gray-600 bg-gray-200 px-2 py-1 rounded">
-                                                {{ $consola->fabricante }}
-                                            </span>
-                                            <span class="text-xs text-gray-500 font-mono">
-                                                {{ $consola->anio_publicacion }}
-                                            </span>
-                                        </div>
+                    {{-- TARJETA LIMPIA --}}
+                    <div class="group relative bg-white rounded-3xl p-6 shadow-sm border border-gray-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl {{ $brand['shadow'] }}">
 
-                                        {{-- ZONA ADMIN: EDITAR Y BORRAR --}}
-                                        @if(Auth::user()->role === 'admin')
-                                            <div class="mt-auto pt-3 border-t border-gray-100 flex justify-end gap-2">
-                                                
-                                                {{-- Botón Editar --}}
-                                                <a href="{{ route('consolas.edit', $consola) }}" class="text-sm bg-yellow-100 text-yellow-700 hover:bg-yellow-200 py-1 px-3 rounded font-medium transition flex items-center">
-                                                    ✏️ Editar
-                                                </a>
+                        {{-- CABECERA: Etiqueta y Admin --}}
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest {{ $brand['bg_light'] }} {{ $brand['text'] }}">
+                                {{ $consola->fabricante }}
+                            </span>
 
-                                                {{-- Botón Borrar --}}
-                                                <form action="{{ route('consolas.destroy', $consola) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta consola? Esta acción no se puede deshacer.');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-sm bg-red-100 text-red-700 hover:bg-red-200 py-1 px-3 rounded font-medium transition flex items-center">
-                                                        🗑️ Borrar
-                                                    </button>
-                                                </form>
-
-                                            </div>
-                                        @endif
-                                    </div>
+                            @if(Auth::user()->isAdmin())
+                                <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <a href="{{ route('consolas.edit', $consola) }}" class="p-2 text-gray-400 hover:text-blue-500 transition">✏️</a>
+                                    <form action="{{ route('consolas.destroy', $consola) }}" method="POST" onsubmit="return confirm('¿Borrar?');">
+                                        @csrf @method('DELETE')
+                                        <button class="p-2 text-gray-400 hover:text-red-500 transition">🗑️</button>
+                                    </form>
                                 </div>
-                            @endforeach
+                            @endif
                         </div>
-                    @endif
 
-                </div>
+                        {{-- IMAGEN CENTRAL (Grande y Nítida) --}}
+                        <div class="h-40 flex items-center justify-center mb-6 relative">
+                            {{-- Círculo decorativo detrás --}}
+                            <div class="absolute w-32 h-32 rounded-full {{ $brand['bg_light'] }} opacity-0 group-hover:scale-150 group-hover:opacity-50 transition-all duration-500"></div>
+
+                            @if($consola->logo)
+                                <img src="{{ Str::startsWith($consola->logo, 'http') ? $consola->logo : asset('storage/' . $consola->logo) }}"
+                                     class="relative z-10 h-full w-auto object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110">
+                            @else
+                                <div class="relative z-10 w-24 h-24 rounded-2xl bg-gradient-to-br {{ $brand['from'] }} {{ $brand['to'] }} flex items-center justify-center text-white text-4xl font-black shadow-lg">
+                                    {{ substr($consola->nombre, 0, 1) }}
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- INFORMACIÓN --}}
+                        <div class="text-center">
+                            <h3 class="text-2xl font-black text-gray-800 mb-1 leading-tight">{{ $consola->nombre }}</h3>
+                            <p class="text-xs text-gray-400 font-medium">Lanzamiento: {{ $consola->anio_publicacion ?? '----' }}</p>
+                        </div>
+
+                        {{-- SEPARADOR --}}
+                        <div class="my-6 border-t border-gray-100"></div>
+
+                        {{-- FOOTER: Botón de Color --}}
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col text-left">
+                                <span class="text-[10px] text-gray-400 font-bold uppercase">Juegos</span>
+                                <span class="text-xl font-black text-gray-800">{{ $consola->juegos->count() }}</span>
+                            </div>
+
+                            <a href="{{ route('videojuegos.index', ['consola_id' => $consola->id]) }}"
+                               class="px-6 py-2.5 rounded-xl bg-gradient-to-r {{ $brand['from'] }} {{ $brand['to'] }} text-white text-sm font-bold shadow-md hover:shadow-lg hover:shadow-{{ $brand['from'] }}/30 transition-all transform active:scale-95 flex items-center gap-2">
+                                Ver Biblioteca
+                                <span>→</span>
+                            </a>
+                        </div>
+
+                    </div>
+                @endforeach
+
             </div>
+
+            {{-- EMPTY STATE --}}
+            @if($consolas->isEmpty())
+                <div class="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200 mt-8">
+                    <span class="text-6xl block mb-4 grayscale opacity-50">🎮</span>
+                    <h3 class="text-xl font-bold text-gray-800">Colección vacía</h3>
+                    <p class="text-gray-500 mt-2 text-sm">Añade tu primera consola para empezar.</p>
+                </div>
+            @endif
+
         </div>
     </div>
 </x-app-layout>
