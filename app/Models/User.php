@@ -16,7 +16,8 @@ class User extends Authenticatable
     'password',
     'role',
     'wallet_balance', // <--- NUEVO
-    'total_donated',  // <--- NUEVO
+    'total_donated',// <--- NUEVO
+    'cvc',  // <--- NUEVO
 ];
 
     protected $hidden = [

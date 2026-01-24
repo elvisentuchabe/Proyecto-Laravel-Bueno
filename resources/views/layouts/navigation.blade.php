@@ -17,13 +17,18 @@
                     Inicio
                 </a>
 
-                {{-- Solo mostramos estos si está logueado, ya que las rutas están protegidas --}}
+                {{-- Solo mostramos estos si está logueado --}}
                 @auth
                     <a href="{{ route('videojuegos.index') }}" class="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium {{ request()->routeIs('videojuegos.*') ? 'text-black font-bold underline' : '' }}">
                         Videojuegos
                     </a>
                     <a href="{{ route('consolas.index') }}" class="text-gray-600 hover:text-black px-3 py-2 text-sm font-medium {{ request()->routeIs('consolas.*') ? 'text-black font-bold underline' : '' }}">
                         Consolas
+                    </a>
+
+                    {{-- ✅ BOTÓN DONAR (Integrado correctamente) --}}
+                    <a href="{{ route('donar.index') }}" class="text-green-600 hover:text-green-800 px-3 py-2 text-sm font-bold flex items-center transition transform hover:scale-105 {{ request()->routeIs('donar.*') ? 'underline' : '' }}">
+                        💳 Donar
                     </a>
 
                     {{-- 2. ENLACES DE ADMINISTRADOR (Solo si es Admin) --}}
