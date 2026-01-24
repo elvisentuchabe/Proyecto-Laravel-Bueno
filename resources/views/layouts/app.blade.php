@@ -8,12 +8,13 @@
     {{-- Carga de estilos y scripts de Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+{{-- CAMBIO 1: Añadimos 'min-h-screen flex flex-col' al body --}}
+<body class="bg-gray-100 font-sans antialiased min-h-screen flex flex-col">
 
-    {{-- Menú de navegación dinámico --}}
+    {{-- Menú de navegación --}}
     @include('layouts.navigation')
 
-    {{-- Cabecera opcional para títulos de página --}}
+    {{-- Cabecera --}}
     @if (isset($header))
         <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -22,28 +23,29 @@
         </header>
     @endif
 
-    {{-- Contenido Principal Híbrido --}}
-    <main class="py-6">
+    {{-- Contenido Principal --}}
+    {{-- CAMBIO 2: Añadimos 'flex-grow' o 'flex-1' para que este div ocupe todo el espacio libre --}}
+    <main class="flex-grow py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- AQUI VA EL PASO 3 (Feedback) --}}
-            {{-- Le añadí 'mb-4' para que no se pegue al contenido de abajo --}}
+            {{-- Mensajes de estado --}}
             @if (session('status'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                     <span class="block sm:inline">{{ session('status') }}</span>
                 </div>
             @endif
-            {{-- FIN DEL PASO 3 --}}
 
-            {{-- Soporte para Componentes de Blade ($slot) --}}
+            {{-- Slots y Contenido --}}
             @isset($slot)
                 {{ $slot }}
             @endisset
 
-            {{-- Soporte para Plantillas tradicionales (@yield) --}}
             @yield('content')
         </div>
     </main>
+
+    {{-- CAMBIO 3: El Footer va aquí, fuera del main, justo antes de cerrar body --}}
+    @include('layouts.footer')
 
 </body>
 </html>

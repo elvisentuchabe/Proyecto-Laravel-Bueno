@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConsolaController;
 use App\Http\Controllers\VideojuegoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DonacionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Videojuegos
     Route::get('/videojuegos', [VideojuegoController::class, 'index'])->name('videojuegos.index');
     Route::get('/videojuegos/{videojuego}', [VideojuegoController::class, 'show'])->name('videojuegos.show');
+
+    //Donaciones
+    Route::get('/donaciones', [DonacionController::class, 'index'])->name('donaciones.index');
+    Route::post('/donaciones', [DonacionController::class, 'procesar'])->name('donaciones.procesar');
 
 });
 
