@@ -18,7 +18,7 @@ class User extends Authenticatable
     'wallet_balance', // <--- NUEVO
     'total_donated',// <--- NUEVO
     'cvc',  // <--- NUEVO
-    ];
+];
 
     protected $hidden = [
         'password',

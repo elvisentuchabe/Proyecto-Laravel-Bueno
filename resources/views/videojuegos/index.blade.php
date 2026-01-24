@@ -145,8 +145,11 @@
                             </div>
                         </div>
                     </div>
+                @endforeach
+            </div>
 
-                </div>
+            <div class="mt-12">
+                {{ $videojuegos->appends(request()->query())->links() }}
             </div>
 
             @if($videojuegos->isEmpty())
