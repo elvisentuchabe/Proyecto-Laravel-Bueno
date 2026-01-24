@@ -5,24 +5,14 @@ use App\Http\Controllers\ConsolaController;
 use App\Http\Controllers\VideojuegoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DonacionController;
-
-/*
-|--------------------------------------------------------------------------
-| 1. PÁGINA DE BIENVENIDA
-|--------------------------------------------------------------------------
-*/
+/* RUTAS PÚBLICAS */
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-/*
-|--------------------------------------------------------------------------
-| 2. ZONA DE USUARIOS (Requiere estar logueado)
-|--------------------------------------------------------------------------
-*/
+/* RUTAS PROTEGIDAS */
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // --- Dashboard y Perfil ---
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -31,51 +21,38 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // --- Bóveda de Favoritos (Cualquier usuario) ---
-    // IMPORTANTE: Estas rutas van ANTES de los recursos o los {id}
-    Route::get('/mi-boveda', [VideojuegoController::class, 'boveda'])->name('videojuegos.boveda');
-    Route::post('/videojuegos/{videojuego}/favorito', [VideojuegoController::class, 'toggleFavorito'])->name('videojuegos.favorito');
-
-    /*
-    |--------------------------------------------------------------------------
-    | 3. ZONA DE ADMINISTRACIÓN (Solo Admins) - PRIORIDAD ALTA
-    |--------------------------------------------------------------------------
-    | Definimos esto PRIMERO para que 'create' no se confunda con un ID.
-    */
+    // --- ZONA ADMIN ---
     Route::middleware(['admin'])->group(function () {
-        
-        // CONSOLAS (Admin)
+        // Consolas
         Route::get('/consolas/create', [ConsolaController::class, 'create'])->name('consolas.create');
         Route::post('/consolas', [ConsolaController::class, 'store'])->name('consolas.store');
         Route::get('/consolas/{consola}/edit', [ConsolaController::class, 'edit'])->name('consolas.edit');
         Route::put('/consolas/{consola}', [ConsolaController::class, 'update'])->name('consolas.update');
         Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
 
-        // VIDEOJUEGOS (Admin)
-        // Usamos resource exceptuando index y show que son públicos abajo.
-        // Al estar aquí arriba, /videojuegos/create funcionará bien.
+        // Videojuegos (Gestión)
         Route::resource('videojuegos', VideojuegoController::class)->except(['index', 'show']);
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | 4. ZONA DE LECTURA (Todos los usuarios) - PRIORIDAD BAJA
-    |--------------------------------------------------------------------------
-    | Estas rutas usan {id}, así que deben ir AL FINAL.
-    */
-    
-    // Consolas
+    // --- ZONA LECTURA Y FAVORITOS ---
+
+    // 1. RUTA NUEVA: Mi Bóveda (Favoritos)
+    Route::get('/mi-boveda', [VideojuegoController::class, 'boveda'])->name('videojuegos.boveda');
+
+    // 2. Rutas Estándar
     Route::get('/consolas', [ConsolaController::class, 'index'])->name('consolas.index');
     Route::get('/consolas/{consola}', [ConsolaController::class, 'show'])->name('consolas.show');
-    
-    // Videojuegos
+
     Route::get('/videojuegos', [VideojuegoController::class, 'index'])->name('videojuegos.index');
     Route::get('/videojuegos/{videojuego}', [VideojuegoController::class, 'show'])->name('videojuegos.show');
 
-    //Donaciones
-    Route::get('/donaciones', [DonacionController::class, 'index'])->name('donaciones.index');
-    Route::post('/donaciones', [DonacionController::class, 'procesar'])->name('donaciones.procesar');
+    // 3. Acción de dar Like/Dislike
+    Route::post('/videojuegos/{juego}/favorito', [VideojuegoController::class, 'toggleFavorito'])->name('videojuegos.favorito');
+    // RUTAS DE DONACIÓN
+    Route::get('/donar', [DonacionController::class, 'index'])->name('donar.index');
+    Route::post('/donar', [DonacionController::class, 'store'])->name('donar.store');
 
 });
 
 require __DIR__.'/auth.php';
+
