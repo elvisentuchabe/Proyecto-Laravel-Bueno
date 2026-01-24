@@ -191,7 +191,7 @@
                     {{-- COLUMNA DERECHA: FORMULARIO --}}
                     <div class="bg-white p-8 rounded-xl shadow-md h-fit">
                         <h3 class="text-lg font-bold mb-4">Realizar Donación</h3>
-                        <form action="{{ route('donar.store') }}" method="POST">
+                        <form action="{{ route('donaciones.store') }}" method="POST">
                             @csrf
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Cantidad (€)</label>

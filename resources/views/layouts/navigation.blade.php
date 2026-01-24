@@ -28,7 +28,7 @@
                     @auth
                         {{-- Link VIDEOJUEGOS --}}
                         @php
-                            $active = request()->routeIs('videojuegos.*');
+                            $active = request()->routeIs('videojuegos.*') && !request()->routeIs('videojuegos.boveda');
                             $classes = $active
                                 ? 'group relative h-16 flex items-center text-sm font-bold text-black'
                                 : 'group relative h-16 flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors';
@@ -52,6 +52,19 @@
                             <span class="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform {{ $lineClass }} transition-transform duration-300"></span>
                         </a>
 
+                        {{-- Link MI BÓVEDA (FAVORITOS) - AÑADIDO --}}
+                        @php
+                            $active = request()->routeIs('videojuegos.boveda');
+                            $classes = $active
+                                ? 'group relative h-16 flex items-center text-sm font-bold text-black'
+                                : 'group relative h-16 flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors';
+                            $lineClass = $active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100';
+                        @endphp
+                        <a href="{{ route('videojuegos.boveda') }}" class="{{ $classes }}">
+                            {{ __('Mi Bóveda') }}
+                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-red-600 transform {{ $lineClass }} transition-transform duration-300"></span>
+                        </a>
+
                         {{-- ENLACES ADMIN (Botones Rojos) --}}
                         @if(Auth::user()->isAdmin())
                             <div class="hidden md:flex items-center space-x-3 border-l border-gray-200 ml-4 pl-4 h-8 self-center">
@@ -72,7 +85,7 @@
 
                 @auth
                     {{-- BOTÓN DONAR --}}
-                    <a href="{{ route('donar.index') }}" class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-full text-sm font-bold shadow-md hover:shadow-lg hover:shadow-green-500/30 transition-all transform hover:-translate-y-0.5">
+                    <a href="{{ route('donaciones.index') }}" class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-full text-sm font-bold shadow-md hover:shadow-lg hover:shadow-green-500/30 transition-all transform hover:-translate-y-0.5">
                         <span class="group-hover:rotate-12 transition-transform">💳</span>
                         <span>Donar</span>
                     </a>
@@ -138,6 +151,7 @@
         </div>
     </div>
 
+    {{-- MENÚ MÓVIL --}}
     <div x-show="open"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 -translate-y-2"
@@ -155,7 +169,7 @@
 
             @auth
                 {{-- Videojuegos Móvil --}}
-                <a href="{{ route('videojuegos.index') }}" class="block w-full pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out rounded-r-lg {{ request()->routeIs('videojuegos.*') ? 'border-red-600 text-red-700 bg-red-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }}">
+                <a href="{{ route('videojuegos.index') }}" class="block w-full pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out rounded-r-lg {{ request()->routeIs('videojuegos.*') && !request()->routeIs('videojuegos.boveda') ? 'border-red-600 text-red-700 bg-red-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }}">
                     {{ __('Videojuegos') }}
                 </a>
 
@@ -164,8 +178,13 @@
                     {{ __('Consolas') }}
                 </a>
 
+                {{-- MI BÓVEDA (FAVORITOS) Móvil - AÑADIDO --}}
+                <a href="{{ route('videojuegos.boveda') }}" class="block w-full pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out rounded-r-lg {{ request()->routeIs('videojuegos.boveda') ? 'border-red-600 text-red-700 bg-red-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }}">
+                    {{ __('Mi Bóveda') }}
+                </a>
+
                 <div class="mt-4 pt-4 border-t border-gray-100">
-                    <a href="{{ route('donar.index') }}" class="block w-full pl-3 pr-4 py-2 text-base font-black text-green-600 bg-green-50 rounded-lg">
+                    <a href="{{ route('donaciones.index') }}" class="block w-full pl-3 pr-4 py-2 text-base font-black text-green-600 bg-green-50 rounded-lg">
                         {{ __('💳 Donar') }}
                     </a>
                 </div>
@@ -212,5 +231,4 @@
             @endauth
         </div>
     </div>
-
-    </nav>
+</nav>

@@ -1,10 +1,6 @@
 @php
-    use App\Models\User;
-    use App\Models\Juego;   // <--- CORREGIDO: Usamos Juego en vez de Videojuego
-    use App\Models\Consola;
-
-    // Solo cargamos datos si el usuario está logueado y es admin
-    $isAdmin = Auth::check() && Auth::user()->isAdmin();
+    // Detectamos si es admin usando la ruta completa
+    $isAdmin = \Illuminate\Support\Facades\Auth::check() && \Illuminate\Support\Facades\Auth::user()->isAdmin();
 
     // Variables por defecto
     $totalUsers = 0;
@@ -15,20 +11,20 @@
     $topConsolas = collect([]);
 
     if ($isAdmin) {
-        $totalUsers = User::count();
-        $totalMoney = User::sum('total_donated');
+        $totalUsers = \App\Models\User::count();
+        $totalMoney = \App\Models\User::sum('total_donated');
 
-        // CORREGIDO: Usamos el modelo Juego
-        if (class_exists(Juego::class)) {
-            $totalJuegos = Juego::count();
-            // Traemos los últimos 5 juegos (asumiendo relación 'consola')
-            $latestGames = Juego::with('consola')->latest()->take(5)->get();
+        // Usamos \App\Models\Juego
+        if (class_exists(\App\Models\Juego::class)) {
+            $totalJuegos = \App\Models\Juego::count();
+            // Traemos los últimos 5 juegos
+            $latestGames = \App\Models\Juego::with('consola')->latest()->take(5)->get();
         }
 
-        if (class_exists(Consola::class)) {
-            $totalConsolas = Consola::count();
-            // Intentamos sacar el top consolas (relación 'juegos')
-            $topConsolas = Consola::withCount('juegos')->orderByDesc('juegos_count')->take(4)->get();
+        if (class_exists(\App\Models\Consola::class)) {
+            $totalConsolas = \App\Models\Consola::count();
+            // Top consolas
+            $topConsolas = \App\Models\Consola::withCount('juegos')->orderByDesc('juegos_count')->take(4)->get();
         }
     }
 @endphp
@@ -98,7 +94,7 @@
                                 <span class="font-bold text-gray-700 group-hover:text-red-700">Añadir Nueva Consola</span>
                                 <span class="bg-white shadow px-2 rounded text-gray-400 group-hover:text-red-500 text-lg font-bold">+</span>
                             </a>
-                            <a href="{{ route('donar.index') }}" class="flex items-center justify-between p-4 bg-gray-50 hover:bg-green-50 hover:border-green-200 border border-transparent rounded-xl transition group">
+                            <a href="{{ route('donaciones.index') }}" class="flex items-center justify-between p-4 bg-gray-50 hover:bg-green-50 hover:border-green-200 border border-transparent rounded-xl transition group">
                                 <span class="font-bold text-gray-700 group-hover:text-green-700">Ver Donantes</span>
                                 <span class="bg-white shadow px-2 rounded text-gray-400 group-hover:text-green-500 text-lg font-bold">€</span>
                             </a>
@@ -157,7 +153,6 @@
                             <div class="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start gap-3">
                                 @auth
                                     <div class="rounded-md shadow">
-                                        {{-- Botón para ir a los juegos --}}
                                         <a href="{{ route('videojuegos.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-white bg-red-600 hover:bg-red-700 md:py-4 md:text-lg transition transform hover:-translate-y-1 hover:shadow-lg">
                                             Ir a mi Bóveda
                                         </a>

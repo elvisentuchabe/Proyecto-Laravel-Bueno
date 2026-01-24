@@ -10,22 +10,27 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Crear el USUARIO ADMINISTRADOR (Tú)
         User::create([
             'name' => 'Usuario Admin',
             'email' => 'admin@test.com',
-            'password' => Hash::make('12345678'), // Contraseña fácil para pruebas
-            'role' => 'admin', // <--- IMPORTANTE: Le damos el poder
+            'password' => Hash::make('12345678'),
+            'role' => 'admin',
+            'wallet_balance' => 5000.00,
+            'cvc' => '123',
+            'total_donated' => 0,
         ]);
 
-        // 2. Crear un USUARIO NORMAL (Para probar lo que NO puede hacer)
         User::create([
             'name' => 'Usuario Normal',
             'email' => 'usuario@test.com',
             'password' => Hash::make('12345678'),
-            'role' => 'user', // <--- Rol normal
+            'role' => 'user',
+            'wallet_balance' => 500.00,
+            'cvc' => '999',
+            'total_donated' => 0,
         ]);
         
+        // Usuarios aleatorios
         User::factory(5)->create(); 
     }
 }

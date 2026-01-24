@@ -107,7 +107,7 @@ class DonacionController extends Controller
             $user->total_donated += $request->amount;
             $user->save();
 
-            return redirect()->route('donar.index')
+            return redirect()->route('donaciones.index')
                 ->with('success', "¡Donación exitosa! Se verificó tu CVC y se descontaron {$request->amount}€.");
 
         } catch (\Exception $e) {

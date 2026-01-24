@@ -3,8 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ConsolaController;
 use App\Http\Controllers\VideojuegoController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DonacionController;
+use Illuminate\Support\Facades\Route;
 /* RUTAS PÚBLICAS */
 Route::get('/', function () {
     return view('welcome');
@@ -49,8 +49,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // 3. Acción de dar Like/Dislike
     Route::post('/videojuegos/{juego}/favorito', [VideojuegoController::class, 'toggleFavorito'])->name('videojuegos.favorito');
     // RUTAS DE DONACIÓN
-    Route::get('/donar', [DonacionController::class, 'index'])->name('donar.index');
-    Route::post('/donar', [DonacionController::class, 'store'])->name('donar.store');
+    Route::get('/donaciones', [DonacionController::class, 'index'])->name('donaciones.index');
+    Route::post('/donaciones', [DonacionController::class, 'store'])->name('donaciones.store');
 
 });
 
