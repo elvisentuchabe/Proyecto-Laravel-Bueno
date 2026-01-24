@@ -6,7 +6,6 @@
             </h2>
 
             {{-- BOTÓN CREAR (Solo Admin) --}}
-            {{-- Verificamos primero si está logueado (@auth) y luego si es admin --}}
             @auth
                 @if(Auth::user()->role === 'admin')
                     <a href="{{ route('videojuegos.create') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition shadow-md">
@@ -21,6 +20,47 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
+
+                    {{-- FORMULARIO DE FILTRO --}}
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
+                        <form action="{{ route('videojuegos.index') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-center">
+
+                            {{-- Input: Búsqueda por Texto --}}
+                            <div class="w-full md:w-1/3">
+                                <input type="text" name="search" placeholder="Buscar juego..."
+                                       value="{{ request('search') }}"
+                                       class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+
+                            {{-- Select: Búsqueda por Consola --}}
+                            <div class="w-full md:w-1/4">
+                                <select name="consola_id" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <option value="">Todas las consolas</option>
+                                    @foreach($consolas as $consola)
+                                        <option value="{{ $consola->id }}" {{ request('consola_id') == $consola->id ? 'selected' : '' }}>
+                                            {{ $consola->nombre }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Botones --}}
+                            <div class="flex items-center gap-2">
+                                <button type="submit" class="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded-md transition">
+                                    🔍 Filtrar
+                                </button>
+
+                                {{-- Botón de Limpiar (solo sale si hay filtros activos) --}}
+                                @if(request('search') || request('consola_id'))
+                                    <a href="{{ route('videojuegos.index') }}" class="text-gray-500 hover:text-red-600 underline text-sm">
+                                        Limpiar
+                                    </a>
+                                @endif
+                            </div>
+
+                        </form>
+                    </div>
+                    {{-- FIN DEL FORMULARIO --}}
 
                     {{-- TABLA --}}
                     <div class="overflow-x-auto">
@@ -71,11 +111,11 @@
                                             </span>
                                         </td>
 
-                                        {{-- 4. ACCIONES (Aquí está la lógica combinada) --}}
+                                        {{-- 4. ACCIONES --}}
                                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-right">
                                             <div class="flex justify-end items-center space-x-3">
 
-                                                {{-- Botón VER (Para todos) --}}
+                                                {{-- Botón VER --}}
                                                 <a href="{{ route('videojuegos.show', $juego) }}" class="text-blue-600 hover:text-blue-900 font-medium">
                                                     Ver
                                                 </a>
@@ -83,28 +123,21 @@
                                                 <form action="{{ route('videojuegos.favorito', $juego) }}" method="POST" class="inline-block ml-2">
                                                     @csrf
                                                     <button type="submit" class="transition transform hover:scale-110 focus:outline-none" title="Añadir/Quitar de favoritos">
-                                                        {{-- Si el usuario YA lo tiene en favoritos, mostramos corazón rojo --}}
                                                         @if(Auth::user()->favoritos->contains($juego->id))
                                                             <span class="text-2xl">❤️</span>
                                                         @else
-                                                            {{-- Si NO lo tiene, mostramos corazón blanco/vacío --}}
                                                             <span class="text-2xl">🤍</span>
                                                         @endif
                                                     </button>
                                                 </form>
 
-                                                {{-- Botones ADMIN (Editar / Eliminar) --}}
+                                                {{-- Botones ADMIN --}}
                                                 @auth
                                                     @if(Auth::user()->role === 'admin')
-
                                                         <span class="text-gray-300">|</span>
-
-                                                        {{-- Editar --}}
                                                         <a href="{{ route('videojuegos.edit', $juego) }}" class="text-amber-600 hover:text-amber-900 font-medium">
                                                             Editar
                                                         </a>
-
-                                                        {{-- Eliminar (Formulario) --}}
                                                         <form action="{{ route('videojuegos.destroy', $juego) }}" method="POST"
                                                               onsubmit="return confirm('¿Seguro que quieres borrar este juego?');">
                                                             @csrf

@@ -10,10 +10,36 @@ use Illuminate\Support\Facades\Auth;
 
 class VideojuegoController extends Controller
 {
-    public function index() {
-        $videojuegos = Juego::with('consola')->paginate(10); 
-        return view('videojuegos.index', compact('videojuegos'));
+    // =========================================================================
+    // 1. MÉTODO INDEX (CON FILTROS)
+    // =========================================================================
+    public function index(Request $request) {
+        // Iniciamos la consulta base cargando la relación con consola
+        $query = Juego::with('consola');
+
+        // 1. Filtro por Título (si escribieron algo en el buscador)
+        if ($request->filled('search')) {
+            $query->where('titulo', 'like', '%' . $request->search . '%');
+        }
+
+        // 2. Filtro por Consola (si seleccionaron una del desplegable)
+        if ($request->filled('consola_id')) {
+            $query->where('consola_id', $request->consola_id);
+        }
+
+        // Obtenemos los resultados paginados (10 por página)
+        $videojuegos = $query->paginate(10);
+
+        // También necesitamos las consolas para llenar el desplegable del filtro en la vista
+        $consolas = Consola::all();
+
+        // Enviamos tanto los juegos como la lista de consolas a la vista
+        return view('videojuegos.index', compact('videojuegos', 'consolas'));
     }
+
+    // =========================================================================
+    // 2. RESTO DE MÉTODOS CRUD
+    // =========================================================================
 
     public function show(Juego $videojuego){
         return view('videojuegos.show', compact('videojuego'));
@@ -30,11 +56,11 @@ class VideojuegoController extends Controller
             'anio_lanzamiento' => 'required|integer|min:1950|max:'.date('Y'),
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
-            'imagen' => 'nullable|image|max:2048', 
+            'imagen' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('imagen')) {
-            $validated['imagen'] = $request->file('imagen')->store('juegos', 'public'); 
+            $validated['imagen'] = $request->file('imagen')->store('juegos', 'public');
         }
 
         // Parche para evitar el error de BD si no tienes la columna nullable
@@ -56,7 +82,7 @@ class VideojuegoController extends Controller
             'anio_lanzamiento' => 'required|integer|min:1950|max:'.date('Y'),
             'descripcion' => 'nullable|string',
             'consola_id' => 'required|exists:consolas,id',
-            'imagen' => 'nullable|image|max:2048', 
+            'imagen' => 'nullable|image|max:2048',
         ]);
 
         if ($request->hasFile('imagen')) {
@@ -75,26 +101,30 @@ class VideojuegoController extends Controller
         $videojuego->delete();
         return redirect()->route('videojuegos.index')->with('success', 'Juego eliminado.');
     }
-    // --- SISTEMA DE FAVORITOS (BÓVEDA) ---
 
-    // 1. Mostrar la Bóveda (solo los juegos que le gustan al usuario)
-    public function boveda()
+    // =========================================================================
+    // 3. SISTEMA DE FAVORITOS (BÓVEDA)
+    // =========================================================================
+
+   public function boveda()
     {
-        // Obtenemos los juegos favoritos del usuario conectado
-        $videojuegos = \Illuminate\Support\Facades\Auth::user()->favoritos()->paginate(10);
-        
+        /** @var \App\Models\User $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        // Ahora el editor ya sabe que $user es TU modelo y quitará el rojo
+        $videojuegos = $user->favoritos()->paginate(10);
+
         return view('videojuegos.boveda', compact('videojuegos'));
     }
 
-    // 2. Acción de Dar/Quitar Like (Toggle)
-    public function toggleFavorito(Juego $videojuego)
+   public function toggleFavorito(Juego $videojuego)
     {
-        // El método 'toggle' detecta automáticamente:
-        // - Si ya es favorito -> Lo quita
-        // - Si no es favorito -> Lo añade
-        \Illuminate\Support\Facades\Auth::user()->favoritos()->toggle($videojuego);
+        /** @var \App\Models\User $user */
+        $user = \Illuminate\Support\Facades\Auth::user();
 
-        // 'back()' nos devuelve a la página donde estábamos (index o bóveda)
-        return back(); 
+        // Ahora el editor sabe que $user tiene el método 'favoritos()'
+        $user->favoritos()->toggle($videojuego);
+
+        return back();
     }
 }
