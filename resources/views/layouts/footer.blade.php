@@ -18,7 +18,7 @@
         @endunless
         
         <div class="text-gray-500 text-xs">
-            &copy; {{ date('Y') }} Museo Proyecto. <br>Hecho con ❤️ por el equipo.
+            &copy; {{ date('Y') }} RetroVault.
         </div>
     </div>
 </footer>
