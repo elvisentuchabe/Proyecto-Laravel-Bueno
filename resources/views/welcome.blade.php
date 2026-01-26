@@ -153,7 +153,7 @@
                             <div class="mt-8 sm:mt-10 sm:flex sm:justify-center lg:justify-start gap-3">
                                 @auth
                                     <div class="rounded-md shadow">
-                                        <a href="{{ route('videojuegos.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-white bg-red-600 hover:bg-red-700 md:py-4 md:text-lg transition transform hover:-translate-y-1 hover:shadow-lg">
+                                        <a href="{{ route('videojuegos.boveda') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-md text-white bg-red-600 hover:bg-red-700 md:py-4 md:text-lg transition transform hover:-translate-y-1 hover:shadow-lg">
                                             Ir a mi Bóveda
                                         </a>
                                     </div>
