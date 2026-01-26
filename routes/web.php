@@ -24,11 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // --- ZONA ADMIN ---
     Route::middleware(['admin'])->group(function () {
         // Consolas
-        Route::get('/consolas/create', [ConsolaController::class, 'create'])->name('consolas.create');
-        Route::post('/consolas', [ConsolaController::class, 'store'])->name('consolas.store');
-        Route::get('/consolas/{consola}/edit', [ConsolaController::class, 'edit'])->name('consolas.edit');
-        Route::put('/consolas/{consola}', [ConsolaController::class, 'update'])->name('consolas.update');
-        Route::delete('/consolas/{consola}', [ConsolaController::class, 'destroy'])->name('consolas.destroy');
+        Route::resource('consolas', ConsolaController::class)->except(['index', 'show']);
 
         // Videojuegos (Gestión)
         Route::resource('videojuegos', VideojuegoController::class)->except(['index', 'show']);
