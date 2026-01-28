@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Carbon\Carbon; // <--- IMPORTANTE: Necesario para manejar fechas
+use Carbon\Carbon; //Para manejar fechas
 
 class DonacionController extends Controller
 {
     public function index()
     {
-        // CASO 1: SI ES ADMIN -> Lista de donantes
-        if (Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        if ($user->isAdmin()) {
             $donantes = User::where('total_donated', '>', 0)
                             ->orderByDesc('total_donated')
                             ->get();
@@ -22,33 +22,26 @@ class DonacionController extends Controller
             return view('donaciones.index', compact('donantes', 'totalRecaudado'));
         }
 
-        // CASO 2: SI ES USUARIO -> Formulario
         return view('donaciones.index');
     }
 
     public function store(Request $request)
     {
-        // 1. VALIDACIÓN
         $request->validate([
             'amount' => 'required|numeric|min:1|max:5000',
             'card_name' => 'required|string',
             'cvc' => 'required|digits:3',
-            
-            // --- VALIDACIÓN DE CADUCIDAD CORREGIDA ---
             'expiry' => ['required', function ($attribute, $value, $fail) {
-                // A) Validamos formato (MM/YY)
+                //Validamos formato (MM/YY)
                 if (!preg_match('/^(0[1-9]|1[0-2])\/([0-9]{2})$/', $value, $matches)) {
                     return $fail('Formato inválido (Usa MM/YY).');
                 }
 
-                // B) Validamos que no esté caducada
+
                 $mes = $matches[1];
                 $anio = '20' . $matches[2]; // Convertimos '25' en '2025'
-
-                // Creamos la fecha (situándonos al final de ese mes)
                 $fechaTarjeta = Carbon::createFromDate($anio, $mes, 1)->endOfMonth();
 
-                // Si esa fecha ya pasó (es menor que hoy), error.
                 if ($fechaTarjeta->isPast()) {
                     $fail('Tu tarjeta ha caducado.');
                 }
@@ -67,10 +60,9 @@ class DonacionController extends Controller
             }],
         ]);
 
-        // 2. SIMULACIÓN DE PAGO
         sleep(1); 
 
-        // 3. ACTUALIZAR TOTAL DONADO
+        // Actualizar dinero donado
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->total_donated += $request->amount;
