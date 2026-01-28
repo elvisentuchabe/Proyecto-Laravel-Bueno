@@ -7,6 +7,7 @@ use App\Models\Consola;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreVideojuegoRequest;
 
 class VideojuegoController extends Controller
 {

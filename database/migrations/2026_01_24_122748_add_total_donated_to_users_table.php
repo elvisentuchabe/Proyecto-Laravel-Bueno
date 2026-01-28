@@ -9,17 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Saldo inicial de 100€ para que puedan probar
-            $table->decimal('wallet_balance', 10, 2)->default(100.00)->after('email');
-            // Historial de lo que han donado
-            $table->decimal('total_donated', 10, 2)->default(0.00)->after('wallet_balance');
+            $table->decimal('total_donated', 10, 2)->default(0.00);
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['wallet_balance', 'total_donated']);
+            $table->dropColumn(['total_donated']);
         });
     }
 };

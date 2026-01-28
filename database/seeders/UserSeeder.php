@@ -10,23 +10,21 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        // 1. Crear el USUARIO ADMINISTRADOR
         User::create([
             'name' => 'Usuario Admin',
             'email' => 'admin@test.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
-            'wallet_balance' => 5000.00,
-            'cvc' => '123',
-            'total_donated' => 0,
+            'total_donated' => 0.00,
         ]);
 
+        // 2. Crear un USUARIO NORMAL
         User::create([
             'name' => 'Usuario Normal',
             'email' => 'usuario@test.com',
             'password' => Hash::make('12345678'),
             'role' => 'user',
-            'wallet_balance' => 500.00,
-            'cvc' => '999',
             'total_donated' => 0,
         ]);
         

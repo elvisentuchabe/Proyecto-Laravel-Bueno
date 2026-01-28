@@ -8,12 +8,6 @@
             <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
                 🏛️ Mi Colección
             </h2>
-
-            @if(Auth::user()->isAdmin())
-                <a href="{{ route('consolas.create') }}" class="bg-gray-900 hover:bg-black text-white font-bold py-2 px-5 rounded-full shadow-lg transition transform hover:scale-105 flex items-center gap-2 text-sm">
-                    <span>+</span> Nueva Consola
-                </a>
-            @endif
         </div>
     </x-slot>
 
