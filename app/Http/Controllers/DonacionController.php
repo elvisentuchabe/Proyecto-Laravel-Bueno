@@ -12,7 +12,7 @@ class DonacionController extends Controller
     public function index()
     {
         /** @var \App\Models\User $user */
-        if ($user->isAdmin()) {
+        if (Auth::user()->isAdmin()) {
             $donantes = User::where('total_donated', '>', 0)
                             ->orderByDesc('total_donated')
                             ->get();
