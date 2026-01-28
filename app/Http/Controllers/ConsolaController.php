@@ -31,7 +31,7 @@ class ConsolaController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $request->file('logo')->store('consolas', 'public');
         }
 
         $validated['licencia_logo'] = 'Desconocida';
@@ -54,7 +54,7 @@ class ConsolaController extends Controller
 
         if ($request->hasFile('logo')) {
             if($consola->logo) Storage::disk('public')->delete($consola->logo);
-            $validated['logo'] = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $request->file('logo')->store('consolas', 'public');
         }
 
         $consola->update($validated);
