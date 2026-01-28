@@ -6,7 +6,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-2xl text-gray-800 leading-tight flex items-center gap-2">
-                {{ isset($esBoveda) ? '🛡️ Mi Bóveda' : '📚 Biblioteca' }}
+                {{ isset($esBoveda) ? 'Mi Bóveda' : 'Biblioteca' }}
             </h2>
         </div>
     </x-slot>
@@ -16,7 +16,6 @@
 
             @if (session('success'))
                 <div class="mb-8 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 shadow-sm rounded-r flex items-center gap-3">
-                    <span class="text-xl">✅</span>
                     <p class="font-medium">{{ session('success') }}</p>
                 </div>
             @endif
@@ -148,7 +147,6 @@
 
             @if($videojuegos->isEmpty())
                 <div class="text-center py-20 bg-white rounded-3xl shadow-sm mt-8 border border-dashed border-gray-200">
-                    <span class="text-6xl block mb-4 grayscale opacity-30">👾</span>
                     <h3 class="text-xl font-bold text-gray-600">Sin resultados</h3>
                 </div>
             @endif

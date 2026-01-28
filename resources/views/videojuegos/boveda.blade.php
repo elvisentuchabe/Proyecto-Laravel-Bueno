@@ -36,7 +36,7 @@
                                         <form action="{{ route('videojuegos.favorito', $juego) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-bold flex items-center gap-1">
-                                                💔 Quitar
+                                                Quitar
                                             </button>
                                         </form>
                                     </div>

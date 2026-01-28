@@ -1,8 +1,5 @@
 <x-app-layout>
-    
-    {{-- ========================================== --}}
-    {{-- MODO ADMINISTRADOR: LISTA DE DONANTES      --}}
-    {{-- ========================================== --}}
+    {{-- LISTA DE DONANTES --}}
     @if(isset($donantes))
         <div class="py-12 bg-gray-50 min-h-screen">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -10,7 +7,7 @@
                 {{-- Encabezado --}}
                 <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <h2 class="text-3xl font-black text-gray-800">
-                        💰 Control de Donaciones
+                        Control de Donaciones
                     </h2>
                     <div class="bg-green-100 border border-green-200 text-green-800 px-6 py-3 rounded-xl font-bold text-xl shadow-sm">
                         Total Recaudado: {{ number_format($totalRecaudado, 2) }}€
@@ -21,7 +18,6 @@
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl border border-gray-100">
                     @if($donantes->isEmpty())
                         <div class="p-12 text-center">
-                            <div class="text-6xl mb-4">😢</div>
                             <h3 class="text-xl font-bold text-gray-400">Aún no hay donaciones registradas.</h3>
                         </div>
                     @else
@@ -59,17 +55,13 @@
             </div>
         </div>
 
-    {{-- ========================================== --}}
-    {{-- MODO USUARIO: FORMULARIO DE PAGO           --}}
-    {{-- ========================================== --}}
+    {{-- FORMULARIO DE PAGO --}}
     @else
         <div class="py-12 bg-gray-50 min-h-screen">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
                 
-                {{-- Mensajes de Feedback --}}
                 @if(session('success'))
                     <div class="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 shadow-sm rounded-r flex items-center gap-3">
-                        <span class="text-2xl">🎉</span>
                         <div>
                             <p class="font-bold">¡Donación Recibida!</p>
                             <p>{{ session('success') }}</p>
@@ -134,7 +126,7 @@
                         {{-- Información de Seguridad --}}
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 class="font-bold text-gray-800 mb-2 flex items-center gap-2">
-                                <span>🔒</span> Pago 100% Seguro
+                                Pago 100% Seguro
                             </h3>
                             <p class="text-sm text-gray-500">
                                 Simulación de pasarela de pago segura (SSL). Tus datos viajan encriptados y no se almacenan permanentemente.
@@ -189,7 +181,6 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">CVC</label>
                                     <div class="relative">
                                         <input type="text" name="cvc" maxlength="3" class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 transition text-center" placeholder="123" required>
-                                        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔒</span>
                                     </div>
                                     @error('cvc') <span class="text-xs text-red-500 font-bold">{{ $message }}</span> @enderror
                                 </div>

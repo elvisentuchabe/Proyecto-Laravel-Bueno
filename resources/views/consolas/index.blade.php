@@ -6,7 +6,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-bold text-2xl text-gray-800 leading-tight tracking-tight">
-                🏛️ Mi Colección
+                Mi Colección
             </h2>
         </div>
     </x-slot>

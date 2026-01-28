@@ -10,10 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     
-                    {{-- Formulario apuntando a UPDATE --}}
                     <form method="POST" action="{{ route('consolas.update', $consola) }}" enctype="multipart/form-data" class="space-y-6">
                         @csrf
-                        @method('PUT') {{-- Importante para editar --}}
+                        @method('PUT')
 
                         <div>
                             <x-input-label for="nombre" :value="__('Nombre de la Consola')" />

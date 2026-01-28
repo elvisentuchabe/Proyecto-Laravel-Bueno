@@ -86,7 +86,6 @@
                 @auth
                     {{-- BOTÓN DONAR --}}
                     <a href="{{ route('donaciones.index') }}" class="group flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-full text-sm font-bold shadow-md hover:shadow-lg hover:shadow-green-500/30 transition-all transform hover:-translate-y-0.5">
-                        <span class="group-hover:rotate-12 transition-transform">💳</span>
                         <span>Donar</span>
                     </a>
 
@@ -116,13 +115,13 @@
                                 Gestionar Cuenta
                             </div>
                             <x-dropdown-link :href="route('profile.edit')" class="hover:bg-red-50 hover:text-red-600">
-                                {{ __('👤 Mi Perfil') }}
+                                {{ __('Mi Perfil') }}
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-500 hover:bg-red-50 hover:text-red-700">
-                                    {{ __('🚪 Cerrar Sesión') }}
+                                    {{ __('Cerrar Sesión') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -185,7 +184,7 @@
 
                 <div class="mt-4 pt-4 border-t border-gray-100">
                     <a href="{{ route('donaciones.index') }}" class="block w-full pl-3 pr-4 py-2 text-base font-black text-green-600 bg-green-50 rounded-lg">
-                        {{ __('💳 Donar') }}
+                        {{ __('Donar') }}
                     </a>
                 </div>
             @endauth
@@ -209,13 +208,13 @@
 
                 <div class="mt-3 space-y-1 px-2">
                     <a href="{{ route('profile.edit') }}" class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-red-50 hover:text-red-800 focus:outline-none focus:bg-red-50 transition duration-150 ease-in-out rounded-lg">
-                        {{ __('👤 Mi Perfil') }}
+                        {{ __('Mi Perfil') }}
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="block w-full px-4 py-2 text-left text-sm leading-5 font-bold text-red-600 hover:bg-red-50 focus:outline-none focus:bg-red-50 transition duration-150 ease-in-out rounded-lg">
-                            {{ __('🚪 Salir') }}
+                            {{ __('Salir') }}
                         </button>
                     </form>
                 </div>

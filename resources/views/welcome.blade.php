@@ -36,7 +36,7 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
                 <h1 class="text-3xl font-black text-gray-800 mb-8 flex items-center gap-3">
-                    <span class="text-red-600">⚡</span> Panel de Control
+                    Panel de Control
                 </h1>
 
                 {{-- 1. TARJETAS DE ESTADÍSTICAS (KPIs) --}}
@@ -47,7 +47,6 @@
                             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Usuarios</p>
                             <p class="text-3xl font-black text-gray-800 mt-1">{{ $totalUsers }}</p>
                         </div>
-                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl text-xl">👥</div>
                     </div>
 
                     {{-- Recaudación --}}
@@ -56,7 +55,6 @@
                             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Donaciones</p>
                             <p class="text-3xl font-black text-green-600 mt-1">{{ number_format($totalMoney, 0) }}€</p>
                         </div>
-                        <div class="p-3 bg-green-50 text-green-600 rounded-xl text-xl">💰</div>
                     </div>
 
                     {{-- Juegos --}}
@@ -65,7 +63,6 @@
                             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Videojuegos</p>
                             <p class="text-3xl font-black text-gray-800 mt-1">{{ $totalJuegos }}</p>
                         </div>
-                        <div class="p-3 bg-red-50 text-red-600 rounded-xl text-xl">👾</div>
                     </div>
 
                     {{-- Consolas --}}
@@ -83,7 +80,7 @@
                     {{-- 2. ACCIONES RÁPIDAS (Accesos directos) --}}
                     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 lg:col-span-1 h-full">
                         <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            🚀 Acciones Rápidas
+                            Acciones Rápidas
                         </h3>
                         <div class="space-y-4">
                             <a href="{{ route('videojuegos.create') }}" class="flex items-center justify-between p-4 bg-gray-50 hover:bg-red-50 hover:border-red-200 border border-transparent rounded-xl transition group">
@@ -104,7 +101,7 @@
                     {{-- 3. ESTADÍSTICAS DE CONSOLAS --}}
                     <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 lg:col-span-2 h-full">
                         <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                            🏆 Consolas Top
+                            Consolas Top
                         </h3>
                         <div class="space-y-6">
                             @foreach($topConsolas as $consola)
