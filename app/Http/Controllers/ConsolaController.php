@@ -34,7 +34,6 @@ class ConsolaController extends Controller
             $validated['logo'] = $request->file('logo')->store('logos', 'public');
         }
 
-        // Parche para evitar error de BD
         $validated['licencia_logo'] = 'Desconocida';
 
         Consola::create($validated);
