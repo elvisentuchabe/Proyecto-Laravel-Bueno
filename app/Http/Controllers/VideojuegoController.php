@@ -123,7 +123,6 @@ class VideojuegoController extends Controller
     {
         $juego = Juego::findOrFail($id);
 
-        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $user->favoritos()->toggle($juego->id);
